@@ -42,8 +42,11 @@ class GameState:
 
             if self.check_win():
                 self.draw()
-                # pygame.display.update()
                 message_box('Game over', 'Player {} wins'.format(self.turn))
+                self.reset()
+            elif self.check_draw():
+                self.draw()
+                message_box('Game over', 'Draw')
                 self.reset()
             else:
                 self.turn = 'X' if self.turn == 'O' else 'O'
@@ -51,9 +54,15 @@ class GameState:
     def valid_move(self, row, col):
         return self.board[row][col] == ''
 
+    def check_draw(self):
+        for row in self.board:
+            for column in row:
+                if column == '':
+                    return False
+        return True
+
     def check_win(self):
         turn = self.turn
-
         # Check rows
         for col in range(len(self.board)):
             if self.board[0][col] == turn and self.board[1][col] == turn and self.board[2][col] == turn:
@@ -66,7 +75,7 @@ class GameState:
         for i in range(len(self.board)):
             if self.board[0][0] == turn and self.board[1][1] == turn and self.board[2][2] == turn:
                 return True
-        # check positive slope diagonal
+        # check negative slope diagonal
         for i in range(len(self.board)):
             if self.board[0][2] == turn and self.board[1][1] == turn and self.board[2][0] == turn:
                 return True
